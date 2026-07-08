@@ -102,6 +102,8 @@ export default function DashboardPage() {
   const [cargandoTestigos, setCargandoTestigos] = useState(false);
   const [nuevaEmergenciaAsignada, setNuevaEmergenciaAsignada] = useState<any>(null);
   const [modalDetalles, setModalDetalles] = useState<any>(null);
+  const [pulsingEmergencies, setPulsingEmergencies] = useState<Record<string, boolean>>({});
+  const prevTestigosRef = useRef<Record<string, number>>({});
   const emergenciasIdsPreviasRef = useRef<Set<string>>(new Set());
   const primeraCargaEmergenciasRef = useRef(true);
   const emergenciasNotificadasRef = useRef<Set<string>>(new Set());
@@ -209,6 +211,22 @@ export default function DashboardPage() {
       });
 
       setEmergencias(emergenciasConUbicacion);
+
+      // Detectar aumento en el contador de testigos para activar la pulsación
+      const newPulsing: Record<string, boolean> = {};
+      let updatedPulsing = false;
+      emergenciasConUbicacion.forEach((e: any) => {
+        const prevCount = prevTestigosRef.current[e.id];
+        if (prevCount !== undefined && e.testigos > prevCount) {
+          newPulsing[e.id] = true;
+          updatedPulsing = true;
+        }
+        prevTestigosRef.current[e.id] = e.testigos;
+      });
+      if (updatedPulsing) {
+        setPulsingEmergencies(prev => ({ ...prev, ...newPulsing }));
+      }
+
       registrarNuevasEmergencias(emergenciasConUbicacion);
 
       if (seleccionada) {
@@ -430,7 +448,16 @@ export default function DashboardPage() {
     return dt.toLocaleDateString('es-PE');
   };
 
-  const emergenciasFiltradas = emergencias.filter(e => e.estado === filtro);
+  const emergenciasFiltradas = emergencias
+    .filter(e => e.estado === filtro)
+    .sort((a, b) => {
+      const aPulsing = pulsingEmergencies[a.id] ? 1 : 0;
+      const bPulsing = pulsingEmergencies[b.id] ? 1 : 0;
+      if (aPulsing !== bPulsing) {
+        return bPulsing - aPulsing;
+      }
+      return new Date(b.creado_en).getTime() - new Date(a.creado_en).getTime();
+    });
 
   const contadores = {
     pendiente: emergencias.filter(e => e.estado === 'pendiente').length,
@@ -459,6 +486,7 @@ export default function DashboardPage() {
       <Toaster position="top-right" />
       <NuevaEmergenciaPopup
         emergencia={nuevaEmergenciaAsignada}
+        tema={tema}
         onClose={() => setNuevaEmergenciaAsignada(null)}
         onVerDetalle={() => {
           if (nuevaEmergenciaAsignada) {
@@ -840,12 +868,27 @@ export default function DashboardPage() {
               ✅ Sin emergencias en esta categoría
             </div>
           ) : emergenciasFiltradas.map(e => (
-            <div key={e.id} onClick={() => setSeleccionada(e)} style={{
-              padding: '16px', borderBottom: `1px solid ${ui.border}`,
-              cursor: 'pointer',
-              backgroundColor: seleccionada?.id === e.id ? (modoClaro ? '#EAF1FA' : '#2A2A2A') : 'transparent',
-              borderLeft: seleccionada?.id === e.id ? '3px solid #E63946' : '3px solid transparent',
-            }}>
+            <div
+              key={e.id}
+              onClick={() => {
+                setSeleccionada(e);
+                if (pulsingEmergencies[e.id]) {
+                  setPulsingEmergencies(prev => {
+                    const copy = { ...prev };
+                    delete copy[e.id];
+                    return copy;
+                  });
+                }
+              }}
+              className={pulsingEmergencies[e.id] ? 'emergency-pulse-active' : ''}
+              style={{
+                padding: '16px', borderBottom: `1px solid ${ui.border}`,
+                cursor: 'pointer',
+                backgroundColor: seleccionada?.id === e.id ? (modoClaro ? '#EAF1FA' : '#2A2A2A') : 'transparent',
+                borderLeft: seleccionada?.id === e.id ? '3px solid #E63946' : '3px solid transparent',
+                transition: 'all 0.3s ease',
+              }}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <span style={{ fontSize: '24px' }}>{iconoTipo[e.tipo] || '🚨'}</span>

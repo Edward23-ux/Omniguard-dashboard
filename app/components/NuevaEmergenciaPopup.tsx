@@ -26,6 +26,7 @@ interface NuevaEmergenciaPopupProps {
   emergencia: EmergenciaPopupData | null;
   onClose: () => void;
   onVerDetalle: () => void;
+  tema?: 'light' | 'dark';
 }
 
 const colorEstado: Record<string, string> = {
@@ -54,7 +55,7 @@ function formatFecha(fecha?: string) {
   })}`;
 }
 
-export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle }: NuevaEmergenciaPopupProps) {
+export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle, tema = 'dark' }: NuevaEmergenciaPopupProps) {
   useEffect(() => {
     if (!emergencia) return;
 
@@ -73,6 +74,21 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
   const etiquetaIA = emergencia.etiqueta_ia || 'pendiente';
   const confianza = typeof emergencia.nivel_confianza_ia === 'number' ? emergencia.nivel_confianza_ia : null;
 
+  const modoClaro = tema === 'light';
+  const colors = {
+    overlay: modoClaro ? 'rgba(15, 23, 42, 0.45)' : 'rgba(5, 10, 15, 0.72)',
+    background: modoClaro ? 'linear-gradient(180deg, #FFFFFF 0%, #F5F8FC 100%)' : 'linear-gradient(180deg, #171717 0%, #101010 100%)',
+    border: modoClaro ? '#D8E2F0' : '#2F2F2F',
+    borderLight: modoClaro ? '#E7EEF7' : '#262626',
+    borderButton: modoClaro ? '#D8E2F0' : '#2D2D2D',
+    buttonBg: modoClaro ? '#E7EEF7' : '#1C1C1C',
+    buttonText: modoClaro ? '#20324D' : '#FFFFFF',
+    cardBg: modoClaro ? '#FFFFFF' : '#151515',
+    text: modoClaro ? '#10233D' : '#FFFFFF',
+    mutedText: modoClaro ? '#5F6B7A' : '#A8A8A8',
+    softerText: modoClaro ? '#7D8896' : '#7D7D7D',
+  };
+
   return createPortal(
     <div
       onClick={onClose}
@@ -80,7 +96,7 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
         position: 'fixed',
         inset: 0,
         zIndex: 200000,
-        backgroundColor: 'rgba(5, 10, 15, 0.72)',
+        backgroundColor: colors.overlay,
         backdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'center',
@@ -93,13 +109,13 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
         style={{
           width: 'min(560px, 100%)',
           borderRadius: '24px',
-          background: 'linear-gradient(180deg, #171717 0%, #101010 100%)',
-          border: '1px solid #2F2F2F',
-          boxShadow: '0 28px 80px rgba(0, 0, 0, 0.55)',
+          background: colors.background,
+          border: `1px solid ${colors.border}`,
+          boxShadow: modoClaro ? '0 28px 80px rgba(16, 35, 61, 0.15)' : '0 28px 80px rgba(0, 0, 0, 0.55)',
           overflow: 'hidden',
         }}
       >
-        <div style={{ padding: '22px 22px 16px', borderBottom: '1px solid #262626' }}>
+        <div style={{ padding: '22px 22px 16px', borderBottom: `1px solid ${colors.borderLight}` }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
             <div
               style={{
@@ -119,10 +135,10 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
             </div>
 
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ color: '#FFFFFF', fontSize: '20px', fontWeight: 800, lineHeight: 1.2 }}>
+              <div style={{ color: colors.text, fontSize: '20px', fontWeight: 800, lineHeight: 1.2 }}>
                 Nueva emergencia asignada
               </div>
-              <div style={{ color: '#A8A8A8', fontSize: '13px', marginTop: '4px' }}>
+              <div style={{ color: colors.mutedText, fontSize: '13px', marginTop: '4px' }}>
                 Se asignó una emergencia a tu compañía en tiempo real.
               </div>
             </div>
@@ -133,9 +149,9 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
                 width: '34px',
                 height: '34px',
                 borderRadius: '10px',
-                border: '1px solid #2D2D2D',
-                backgroundColor: '#1C1C1C',
-                color: '#FFFFFF',
+                border: `1px solid ${colors.borderButton}`,
+                backgroundColor: colors.buttonBg,
+                color: colors.buttonText,
                 cursor: 'pointer',
                 flexShrink: 0,
               }}
@@ -148,63 +164,63 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
 
         <div style={{ padding: '20px 22px 8px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: '#151515', border: '1px solid #262626' }}>
-              <div style={{ color: '#A8A8A8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: colors.cardBg, border: `1px solid ${colors.borderLight}` }}>
+              <div style={{ color: colors.mutedText, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 Tipo
               </div>
-              <div style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
+              <div style={{ color: colors.text, fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
                 {tipo}
               </div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: '#151515', border: '1px solid #262626' }}>
-              <div style={{ color: '#A8A8A8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: colors.cardBg, border: `1px solid ${colors.borderLight}` }}>
+              <div style={{ color: colors.mutedText, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 Estado
               </div>
-              <div style={{ color: colorEstado[estado] || '#FFFFFF', fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
+              <div style={{ color: colorEstado[estado] || colors.text, fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
                 {estado.toUpperCase().replace('_', ' ')}
               </div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: '#151515', border: '1px solid #262626' }}>
-              <div style={{ color: '#A8A8A8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: colors.cardBg, border: `1px solid ${colors.borderLight}` }}>
+              <div style={{ color: colors.mutedText, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 Compañía
               </div>
-              <div style={{ color: '#FFFFFF', fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
+              <div style={{ color: colors.text, fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
                 {emergencia.companias_bomberos?.nombre || 'Sin asignar'}
               </div>
             </div>
 
-            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: '#151515', border: '1px solid #262626' }}>
-              <div style={{ color: '#A8A8A8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ padding: '14px', borderRadius: '16px', backgroundColor: colors.cardBg, border: `1px solid ${colors.borderLight}` }}>
+              <div style={{ color: colors.mutedText, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                 Confianza IA
               </div>
-              <div style={{ color: colorEtiquetaIA[etiquetaIA] || '#FFFFFF', fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
+              <div style={{ color: colorEtiquetaIA[etiquetaIA] || colors.text, fontSize: '16px', fontWeight: 700, marginTop: '6px' }}>
                 {confianza !== null ? `${confianza}%` : 'N/D'}
               </div>
             </div>
           </div>
 
-          <div style={{ marginTop: '14px', padding: '14px', borderRadius: '16px', backgroundColor: '#151515', border: '1px solid #262626' }}>
-            <div style={{ color: '#A8A8A8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ marginTop: '14px', padding: '14px', borderRadius: '16px', backgroundColor: colors.cardBg, border: `1px solid ${colors.borderLight}` }}>
+            <div style={{ color: colors.mutedText, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Reportante
             </div>
-            <div style={{ color: '#FFFFFF', fontSize: '15px', fontWeight: 700, marginTop: '6px' }}>
+            <div style={{ color: colors.text, fontSize: '15px', fontWeight: 700, marginTop: '6px' }}>
               {emergencia.usuarios?.nombres || 'Sin nombre'} {emergencia.usuarios?.apellidos || ''}
             </div>
-            <div style={{ color: '#A8A8A8', fontSize: '13px', marginTop: '4px' }}>
+            <div style={{ color: colors.mutedText, fontSize: '13px', marginTop: '4px' }}>
               DNI: {emergencia.usuarios?.dni || 'N/D'}
             </div>
           </div>
 
-          <div style={{ marginTop: '14px', padding: '14px', borderRadius: '16px', backgroundColor: '#151515', border: '1px solid #262626' }}>
-            <div style={{ color: '#A8A8A8', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+          <div style={{ marginTop: '14px', padding: '14px', borderRadius: '16px', backgroundColor: colors.cardBg, border: `1px solid ${colors.borderLight}` }}>
+            <div style={{ color: colors.mutedText, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               Dirección aproximada
             </div>
-            <div style={{ color: '#FFFFFF', fontSize: '14px', marginTop: '6px', lineHeight: 1.5 }}>
+            <div style={{ color: colors.text, fontSize: '14px', marginTop: '6px', lineHeight: 1.5 }}>
               {emergencia.direccion_aproximada || 'No disponible'}
             </div>
-            <div style={{ color: '#7D7D7D', fontSize: '12px', marginTop: '10px' }}>
+            <div style={{ color: colors.softerText, fontSize: '12px', marginTop: '10px' }}>
               {formatFecha(emergencia.creado_en)}
             </div>
           </div>

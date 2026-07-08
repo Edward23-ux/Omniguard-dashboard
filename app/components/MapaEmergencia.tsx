@@ -25,7 +25,7 @@ export default function MapaEmergencia({ ubicacion, tema = 'dark' }: MapaEmergen
     } else {
       setCoords({ lat: -6.7714, lng: -79.8449 });
     }
-    
+
     // Forzar recreación del mapa
     setKey(prev => prev + 1);
   }, [ubicacion]); // ← Se ejecuta cada vez que cambia la ubicación
@@ -35,7 +35,7 @@ export default function MapaEmergencia({ ubicacion, tema = 'dark' }: MapaEmergen
     const loadLeaflet = async () => {
       // Importar CSS
       await import('leaflet/dist/leaflet.css');
-      
+
       // Importar L y react-leaflet
       const L = (await import('leaflet')).default;
       const { MapContainer, TileLayer, Marker, Popup } = await import('react-leaflet');

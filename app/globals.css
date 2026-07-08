@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import 'tailwindcss';
+
 :root {
   --primary: #E63946;
   --primary-dark: #C1121F;
@@ -47,8 +48,15 @@ body {
 
 /* Animación de pulso para emergencias activas */
 @keyframes pulse-red {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .pulse-red {
@@ -73,4 +81,27 @@ body {
 
 .leaflet-popup-tip {
   background-color: #1A1A1A;
+}
+
+/* Animación premium de pulsación para emergencias con incremento de testigos */
+@keyframes emergency-pulse {
+  0% {
+    box-shadow: inset 0 0 0 1px rgba(230, 57, 70, 0.8), 0 0 0 0px rgba(230, 57, 70, 0.4);
+    border-color: rgba(230, 57, 70, 0.8);
+  }
+
+  70% {
+    box-shadow: inset 0 0 0 1px rgba(230, 57, 70, 0.2), 0 0 0 8px rgba(230, 57, 70, 0);
+    border-color: rgba(230, 57, 70, 0.3);
+  }
+
+  100% {
+    box-shadow: inset 0 0 0 1px rgba(230, 57, 70, 0.8), 0 0 0 0px rgba(230, 57, 70, 0);
+    border-color: rgba(230, 57, 70, 0.8);
+  }
+}
+
+.emergency-pulse-active {
+  animation: emergency-pulse 1.6s infinite ease-in-out;
+  background-color: rgba(230, 57, 70, 0.05) !important;
 }
