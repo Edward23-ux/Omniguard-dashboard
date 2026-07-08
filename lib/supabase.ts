@@ -14,7 +14,7 @@ export type Emergencia = {
   testigos: number
   direccion_aproximada: string | null
   nivel_confianza_ia: number
-  ubicacion: string  // ← AGREGAR ESTA LÍNEA
+  ubicacion: string
   creado_en: string
   actualizado_en: string
   companias_bomberos: {
