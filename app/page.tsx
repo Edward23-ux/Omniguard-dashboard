@@ -91,9 +91,9 @@ export default function LoginPage() {
           expira: Date.now() + 8 * 60 * 60 * 1000, // 8 horas
         };
         localStorage.setItem('dashboard_session', JSON.stringify(session));
-        
+
         toast.success(`Bienvenido ${data.usuario.nombre}`);
-        
+
         // Redirigir según rol
         if (data.usuario.rol === 'admin') {
           router.push('/admin');
@@ -178,7 +178,7 @@ export default function LoginPage() {
       >
         {modoClaro ? '🌙' : '☀️'}
       </button>
-      
+
       <div style={{
         backgroundColor: ui.panel,
         padding: '40px',
@@ -289,20 +289,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Credenciales de prueba */}
-        <div style={{
-          marginTop: '24px',
-          padding: '16px',
-          backgroundColor: ui.surface,
-          borderRadius: '12px',
-          fontSize: '12px',
-          color: ui.mutedText,
-          border: `1px solid ${ui.border}`,
-        }}>
-          <p style={{ marginBottom: '8px' }}>📝 Credenciales de prueba:</p>
-          <p>🔐 Admin: <strong>admin@omniguard.pe</strong> / <strong>admin123</strong></p>
-          <p>🚒 Bombero: <strong>josequinonezn108@omniguard.pe</strong> / <strong>bomberos123</strong></p>
-        </div>
       </div>
     </div>
   );
