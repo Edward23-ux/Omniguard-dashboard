@@ -16,15 +16,61 @@ const colorEstado: Record<string, string> = {
   falsa_alarma: '#666666',
 };
 
-const iconoTipo: Record<string, string> = {
-  'Incendio': '🔥',
-  'Accidente Vehicular': '🚗',
-  'Fuga de Gas': '💨',
-  'Rescate': '🆘',
-  'Derrumbe': '🏚️',
-  'Inundación': '🌊',
-  'Explosión': '💥',
-  'Otro': '🚨',
+const iconoTipo: Record<string, React.ReactNode> = {
+  'Incendio': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#E63946', verticalAlign: 'middle' }}>
+      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+    </svg>
+  ),
+  'Accidente Vehicular': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#4361EE', verticalAlign: 'middle' }}>
+      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+      <circle cx="7" cy="17" r="2" />
+      <circle cx="17" cy="17" r="2" />
+      <path d="M9 17h6" />
+    </svg>
+  ),
+  'Fuga de Gas': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#06D6A0', verticalAlign: 'middle' }}>
+      <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2" />
+    </svg>
+  ),
+  'Rescate': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#FF006E', verticalAlign: 'middle' }}>
+      <circle cx="12" cy="12" r="10" />
+      <path d="m4.93 4.93 4.24 4.24" />
+      <path d="m14.83 9.17 4.24-4.24" />
+      <path d="m14.83 14.83 4.24 4.24" />
+      <path d="m9.17 14.83-4.24 4.24" />
+      <circle cx="12" cy="12" r="4" />
+    </svg>
+  ),
+  'Derrumbe': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#FB8500', verticalAlign: 'middle' }}>
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <path d="M9 22V12h6v10" />
+      <path d="m11 5 2 5-4 2 2 3" />
+    </svg>
+  ),
+  'Inundación': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#00B4D8', verticalAlign: 'middle' }}>
+      <path d="M2 6c.6 0 1.2-.2 1.6-.6L5 4l1.4 1.4c.4.4 1 .6 1.6.6s1.2-.2 1.6-.6L11 4l1.4 1.4c.4.4 1 .6 1.6.6s1.2-.2 1.6-.6L17 4l1.4 1.4c.4.4 1 .6 1.6.6" />
+      <path d="M2 12c.6 0 1.2-.2 1.6-.6L5 10l1.4 1.4c.4.4 1 .6 1.6.6s1.2-.2 1.6-.6L11 10l1.4 1.4c.4.4 1 .6 1.6.6s1.2-.2 1.6-.6L17 10l1.4 1.4c.4.4 1 .6 1.6.6" />
+      <path d="M2 18c.6 0 1.2-.2 1.6-.6L5 16l1.4 1.4c.4.4 1 .6 1.6.6s1.2-.2 1.6-.6L11 16l1.4 1.4c.4.4 1 .6 1.6.6s1.2-.2 1.6-.6L17 16l1.4 1.4c.4.4 1 .6 1.6.6" />
+    </svg>
+  ),
+  'Explosión': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#D62828', verticalAlign: 'middle' }}>
+      <path d="m12 3-1.912 5.886L4.2 8.878l4.757 4.107-1.818 6.015L12 15.275l4.86 3.725-1.817-6.015 4.756-4.107-5.888-.008z" />
+    </svg>
+  ),
+  'Otro': (
+    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#8338EC', verticalAlign: 'middle' }}>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+  ),
 };
 
 const colorEtiquetaIA: Record<string, string> = {
@@ -37,18 +83,61 @@ const colorEtiquetaIA: Record<string, string> = {
 const THEME_STORAGE_KEY = 'omniguard-dashboard-theme';
 
 type EstadoEmergencia = 'pendiente' | 'en_proceso' | 'culminado' | 'falsa_alarma';
-
 type AccionEmergencia = {
   estado: EstadoEmergencia;
   label: string;
   color: string;
+  Icon: React.ComponentType<{ style?: React.CSSProperties }>;
 };
 
 const ACCIONES_EMERGENCIA: AccionEmergencia[] = [
-  { estado: 'pendiente', label: '⏳ Pendiente', color: '#B38A2D' },
-  { estado: 'en_proceso', label: '🚒 Atender', color: '#3B82F6' },
-  { estado: 'culminado', label: '✅ Culminar', color: '#22C55E' },
-  { estado: 'falsa_alarma', label: '❌ Falsa Alarma', color: '#E63946' },
+  {
+    estado: 'pendiente',
+    label: 'Pendiente',
+    color: '#B38A2D',
+    Icon: (props) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    )
+  },
+  {
+    estado: 'en_proceso',
+    label: 'Atender',
+    color: '#3B82F6',
+    Icon: (props) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+        <circle cx="7.5" cy="18.5" r="2.5" />
+        <path d="M14 14h7.5c.9 0 1.5-.5 1.5-1.2V9.5c0-.9-.7-1.5-1.5-1.5H14" />
+        <circle cx="18.5" cy="18.5" r="2.5" />
+      </svg>
+    )
+  },
+  {
+    estado: 'culminado',
+    label: 'Culminar',
+    color: '#22C55E',
+    Icon: (props) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+        <polyline points="22 4 12 14.01 9 11.01" />
+      </svg>
+    )
+  },
+  {
+    estado: 'falsa_alarma',
+    label: 'Falsa Alarma',
+    color: '#E63946',
+    Icon: (props) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+        <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2" />
+        <line x1="15" y1="9" x2="9" y2="15" />
+        <line x1="9" y1="9" x2="15" y2="15" />
+      </svg>
+    )
+  },
 ];
 
 const ESTADOS_HABILITADOS_POR_ESTADO: Record<EstadoEmergencia, EstadoEmergencia[]> = {
@@ -103,6 +192,9 @@ export default function DashboardPage() {
   const [nuevaEmergenciaAsignada, setNuevaEmergenciaAsignada] = useState<any>(null);
   const [modalDetalles, setModalDetalles] = useState<any>(null);
   const [pulsingEmergencies, setPulsingEmergencies] = useState<Record<string, boolean>>({});
+  const [hoveredEmergencyId, setHoveredEmergencyId] = useState<string | null>(null);
+  const [hoveredFooterButton, setHoveredFooterButton] = useState<'theme' | 'logout' | null>(null);
+  const [hoveredFilter, setHoveredFilter] = useState<string | null>(null);
   const prevTestigosRef = useRef<Record<string, number>>({});
   const emergenciasIdsPreviasRef = useRef<Set<string>>(new Set());
   const primeraCargaEmergenciasRef = useRef(true);
@@ -613,62 +705,90 @@ export default function DashboardPage() {
 
       {/* ── SIDEBAR ── */}
       <div style={{
-        width: '380px', backgroundColor: ui.sidebar,
-        borderRight: `1px solid ${ui.border}`, display: 'flex', flexDirection: 'column',
-        boxShadow: modoClaro ? '0 16px 40px rgba(16, 35, 61, 0.08)' : 'none',
+        width: '350px',
+        minWidth: '350px',
+        height: '100%',
+        backgroundColor: ui.sidebar,
+        borderRight: `1px solid ${ui.border}`,
+        display: 'flex',
+        flexDirection: 'column',
+        boxShadow: modoClaro ? '0 16px 40px rgba(16, 35, 61, 0.04)' : 'none',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
       }}>
 
         {/* Header */}
         <div style={{
-          padding: '20px', borderBottom: `1px solid ${ui.border}`,
-          display: 'flex', alignItems: 'center', gap: '12px',
+          padding: '24px 20px',
+          borderBottom: `1px solid ${ui.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
         }}>
           <div style={{
-            width: '40px', height: '40px', backgroundColor: '#E63946',
-            borderRadius: '10px', display: 'flex', alignItems: 'center',
-            justifyContent: 'center', fontSize: '20px',
-          }}>🛡️</div>
-          <div>
-            <div style={{ fontWeight: 'bold', fontSize: '18px', color: ui.text }}>OmniGuard</div>
-            <div style={{ color: ui.mutedText, fontSize: '12px' }}>
+            width: '36px',
+            height: '36px',
+            backgroundColor: 'rgba(230, 57, 70, 0.09)',
+            color: '#E63946',
+            borderRadius: '8px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontWeight: 700, fontSize: '16px', color: ui.text, letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              OmniGuard
+              <span style={{
+                width: '8px',
+                height: '8px',
+                backgroundColor: '#2DC653',
+                borderRadius: '50%',
+                display: 'inline-block',
+                boxShadow: '0 0 8px #2DC653',
+              }} title="Conectado en tiempo real" />
+            </div>
+            <div style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 500 }}>
               {usuario.rol === 'admin' ? 'Administrador' : `${usuario.nombre}`}
             </div>
           </div>
-          <div style={{
-            marginLeft: 'auto', width: '10px', height: '10px',
-            backgroundColor: '#2DC653', borderRadius: '50%',
-          }} title="Conectado en tiempo real" />
         </div>
 
         {/* Contador unidades */}
         {usuario.rol !== 'admin' && unidadesDisponibles !== null && (
           <div style={{
-            margin: '12px',
+            margin: '16px 16px 8px 16px',
             padding: '16px',
-            backgroundColor: ui.cardSoft,
+            backgroundColor: modoClaro ? 'rgba(45, 198, 83, 0.05)' : 'rgba(45, 198, 83, 0.12)',
             borderRadius: '12px',
-            border: `1px solid ${sinUnidades ? '#E63946' : '#2DC653'}`,
+            border: `1px solid ${sinUnidades ? 'rgba(230, 57, 70, 0.2)' : 'rgba(45, 198, 83, 0.2)'}`,
             textAlign: 'center',
-            boxShadow: modoClaro ? '0 10px 24px rgba(16, 35, 61, 0.06)' : 'none',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '4px',
           }}>
-            <div style={{ fontSize: '11px', color: ui.mutedText, marginBottom: '4px' }}>
-              🚒 UNIDADES DISPONIBLES
+            <div style={{ fontSize: '10px', fontWeight: 700, color: sinUnidades ? '#E63946' : '#2DC653', letterSpacing: '0.05em' }}>
+              UNIDADES DISPONIBLES
             </div>
             <div style={{
-              fontSize: '40px', fontWeight: 'bold',
+              fontSize: '32px',
+              fontWeight: 800,
               color: sinUnidades ? '#E63946' : '#2DC653',
+              lineHeight: 1.1,
             }}>
-              {unidadesDisponibles}
-            </div>
-            <div style={{ fontSize: '11px', color: ui.softerText }}>
-              de {unidadesTotales} totales
+              {unidadesDisponibles} <span style={{ fontSize: '14px', fontWeight: 500, color: ui.mutedText }}>/ {unidadesTotales}</span>
             </div>
             {sinUnidades && (
               <div style={{
-                marginTop: '8px', fontSize: '11px',
-                color: '#E63946', fontWeight: 'bold',
+                marginTop: '4px',
+                fontSize: '11px',
+                color: '#E63946',
+                fontWeight: 600,
               }}>
-                ⚠️ Sin unidades — no se puede atender
+                ⚠️ Sin unidades disponibles
               </div>
             )}
           </div>
@@ -676,40 +796,66 @@ export default function DashboardPage() {
 
         {/* Contadores */}
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
-          gap: '1px', backgroundColor: ui.border, borderBottom: `1px solid ${ui.border}`,
+          margin: '12px 16px',
+          padding: '4px',
+          borderRadius: '12px',
+          backgroundColor: modoClaro ? '#F4F7FC' : '#141414',
+          border: `1px solid ${ui.border}`,
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr',
+          gap: '4px',
         }}>
           {[
             { label: 'Pendientes', count: contadores.pendiente, color: '#FFC300' },
             { label: 'En Proceso', count: contadores.en_proceso, color: '#4361EE' },
             { label: 'Culminados', count: contadores.culminado, color: '#2DC653' },
           ].map(item => (
-            <div key={item.label} style={{ backgroundColor: ui.card, padding: '16px', textAlign: 'center' }}>
-              <div style={{ fontSize: '28px', fontWeight: 'bold', color: item.color }}>{item.count}</div>
-              <div style={{ fontSize: '11px', color: ui.mutedText }}>{item.label}</div>
+            <div key={item.label} style={{ padding: '10px 4px', textAlign: 'center' }}>
+              <div style={{ fontSize: '20px', fontWeight: 800, color: item.color }}>{item.count}</div>
+              <div style={{ fontSize: '10px', color: ui.mutedText, fontWeight: 600 }}>{item.label}</div>
             </div>
           ))}
         </div>
 
         {/* Filtros */}
         <div style={{
-          padding: '12px 16px', borderBottom: `1px solid ${ui.border}`,
-          display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '8px',
+          padding: '8px 16px',
+          display: 'flex',
+          gap: '6px',
+          borderBottom: `1px solid ${ui.border}`,
+          overflowX: 'auto',
         }}>
-          {FILTROS.map(f => (
-            <button key={f} onClick={() => setFiltro(f)} style={{
-              width: '100%', padding: '4px 12px', borderRadius: '20px', border: 'none',
-              cursor: 'pointer', fontSize: '12px',
-              fontWeight: filtro === f ? 'bold' : 'normal',
-              backgroundColor: filtro === f ? '#E63946' : ui.chip,
-              color: filtro === f ? 'white' : '#AAAAAA',
-              whiteSpace: 'nowrap',
-            }}>
-              {f === 'pendiente' ? 'Pendiente' :
-                f === 'en_proceso' ? 'EnProceso' :
-                  f === 'culminado' ? 'Culminado' : 'Falsas'}
-            </button>
-          ))}
+          {FILTROS.map(f => {
+            const selected = filtro === f;
+            const isHovered = hoveredFilter === f;
+            return (
+              <button
+                key={f}
+                onClick={() => setFiltro(f)}
+                onMouseEnter={() => setHoveredFilter(f)}
+                onMouseLeave={() => setHoveredFilter(null)}
+                style={{
+                  flex: 1,
+                  padding: '6px 10px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '11.5px',
+                  fontWeight: selected ? 700 : 500,
+                  backgroundColor: selected
+                    ? 'rgba(230, 57, 70, 0.08)'
+                    : (isHovered ? (modoClaro ? 'rgba(16, 35, 61, 0.03)' : 'rgba(255, 255, 255, 0.03)') : 'transparent'),
+                  color: selected ? '#E63946' : ui.mutedText,
+                  whiteSpace: 'nowrap',
+                  transition: 'all 0.15s ease-in-out',
+                }}
+              >
+                {f === 'pendiente' ? 'Pendientes' :
+                  f === 'en_proceso' ? 'En Proceso' :
+                    f === 'culminado' ? 'Culminados' : 'Falsas'}
+              </button>
+            );
+          })}
         </div>
 
         {/* ── MODAL TESTIGOS ── */}
@@ -825,7 +971,7 @@ export default function DashboardPage() {
                               fontSize: '13px',
                               whiteSpace: 'nowrap',
                             }}>
-                              {hora}
+                              {formatFecha(t.fecha)}
                             </td>
                           </tr>
                         );
@@ -860,101 +1006,181 @@ export default function DashboardPage() {
         {/* Lista emergencias */}
         <div style={{ flex: 1, overflowY: 'auto' }}>
           {isLoading ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: ui.mutedText }}>
+            <div style={{ padding: '40px', textAlign: 'center', color: ui.mutedText, fontSize: '13px' }}>
               Cargando emergencias...
             </div>
           ) : emergenciasFiltradas.length === 0 ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: ui.mutedText }}>
-              ✅ Sin emergencias en esta categoría
+            <div style={{ padding: '40px', textAlign: 'center', color: ui.mutedText, fontSize: '13px' }}>
+              Sin emergencias en esta categoría
             </div>
-          ) : emergenciasFiltradas.map(e => (
-            <div
-              key={e.id}
-              onClick={() => {
-                setSeleccionada(e);
-                if (pulsingEmergencies[e.id]) {
-                  setPulsingEmergencies(prev => {
-                    const copy = { ...prev };
-                    delete copy[e.id];
-                    return copy;
-                  });
-                }
-              }}
-              className={pulsingEmergencies[e.id] ? 'emergency-pulse-active' : ''}
-              style={{
-                padding: '16px', borderBottom: `1px solid ${ui.border}`,
-                cursor: 'pointer',
-                backgroundColor: seleccionada?.id === e.id ? (modoClaro ? '#EAF1FA' : '#2A2A2A') : 'transparent',
-                borderLeft: seleccionada?.id === e.id ? '3px solid #E63946' : '3px solid transparent',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <span style={{ fontSize: '24px' }}>{iconoTipo[e.tipo] || '🚨'}</span>
-                  <div>
-                    <div style={{ fontWeight: 'bold', fontSize: '14px', color: ui.text }}>{e.tipo}</div>
-                    <div style={{ color: ui.mutedText, fontSize: '12px' }}>👥 {e.testigos} testigo(s)</div>
+          ) : emergenciasFiltradas.map(e => {
+            const isSelected = seleccionada?.id === e.id;
+            const isHovered = hoveredEmergencyId === e.id;
+            return (
+              <div
+                key={e.id}
+                onClick={() => {
+                  setSeleccionada(e);
+                  if (pulsingEmergencies[e.id]) {
+                    setPulsingEmergencies(prev => {
+                      const copy = { ...prev };
+                      delete copy[e.id];
+                      return copy;
+                    });
+                  }
+                }}
+                onMouseEnter={() => setHoveredEmergencyId(e.id)}
+                onMouseLeave={() => setHoveredEmergencyId(null)}
+                className={pulsingEmergencies[e.id] ? 'emergency-pulse-active' : ''}
+                style={{
+                  padding: '14px 16px',
+                  borderBottom: `1px solid ${ui.border}`,
+                  cursor: 'pointer',
+                  backgroundColor: isSelected
+                    ? (modoClaro ? 'rgba(230, 57, 70, 0.04)' : 'rgba(230, 57, 70, 0.1)')
+                    : (isHovered ? (modoClaro ? 'rgba(16, 35, 61, 0.02)' : 'rgba(255, 255, 255, 0.02)') : 'transparent'),
+                  borderLeft: `3px solid ${isSelected ? '#E63946' : 'transparent'}`,
+                  transition: 'all 0.18s ease-in-out',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <span style={{ fontSize: '20px', display: 'flex', alignItems: 'center' }}>
+                      {iconoTipo[e.tipo] || '🚨'}
+                    </span>
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: '13.5px', color: ui.text }}>{e.tipo}</div>
+                      <div style={{ color: ui.mutedText, fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '2px' }}>
+                        <span>👥</span> {e.testigos} testigo(s)
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
+                    <div style={{
+                      fontSize: '10px',
+                      padding: '2px 6px',
+                      borderRadius: '10px',
+                      backgroundColor: colorEstado[e.estado] + '18',
+                      color: colorEstado[e.estado],
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                    }}>
+                      {e.estado.replace('_', ' ')}
+                    </div>
+                    <div style={{ color: ui.softerText, fontSize: '10.5px' }}>
+                      {formatFecha(e.creado_en)}
+                    </div>
                   </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{
-                    fontSize: '11px', padding: '3px 8px', borderRadius: '20px',
-                    backgroundColor: colorEstado[e.estado] + '22',
-                    color: colorEstado[e.estado], fontWeight: 'bold',
-                  }}>
-                    {e.estado.toUpperCase().replace('_', ' ')}
-                  </div>
-                  <div style={{ color: ui.softerText, fontSize: '11px', marginTop: '4px' }}>
-                    {formatFecha(e.creado_en)}
-                  </div>
-                </div>
-              </div>
-              <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: '11px', color: ui.softerText }}>IA:</span>
-                <span style={{
-                  fontSize: '11px',
-                  color: colorEtiquetaIA[e.etiqueta_ia] || '#666',
-                  fontWeight: 'bold',
+                <div style={{
+                  marginTop: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  fontSize: '10.5px',
+                  color: ui.softerText,
                 }}>
-                  {e.etiqueta_ia === 'aprobado' ? '✅ Aprobado' :
-                    e.etiqueta_ia === 'revision_manual' ? '⚠️ Revisión Manual' :
-                      e.etiqueta_ia === 'rechazado' ? '❌ Rechazado' : '⏳ Pendiente'}
-                </span>
+                  <span>IA:</span>
+                  <span style={{
+                    color: colorEtiquetaIA[e.etiqueta_ia] || '#666',
+                    fontWeight: 600,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '3px',
+                  }}>
+                    {e.etiqueta_ia === 'aprobado' ? 'Aprobado' :
+                      e.etiqueta_ia === 'revision_manual' ? 'Revisión' : 'Rechazado'}
+                  </span>
+                  {e.nivel_confianza_ia !== undefined && (
+                    <span>({e.nivel_confianza_ia}%)</span>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Footer */}
         <div style={{
-          padding: '12px 16px', borderTop: `1px solid ${ui.border}`,
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '16px 20px',
+          borderTop: `1px solid ${ui.border}`,
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '12px',
         }}>
-          <span style={{ color: ui.softerText, fontSize: '12px' }}>
-            {emergenciasFiltradas.length} emergencia(s)
+          <span style={{ color: ui.softerText, fontSize: '11px', fontWeight: 500 }}>
+            {emergenciasFiltradas.length} emergencias
           </span>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <button onClick={() => setTema(tema === 'dark' ? 'light' : 'dark')} style={{
-              padding: '6px 12px',
-              backgroundColor: ui.neutralButton,
-              border: 'none',
-              borderRadius: '8px',
-              color: ui.neutralButtonText,
-              cursor: 'pointer',
-              fontSize: '12px',
-              fontWeight: 'bold',
-            }}>
-              {modoClaro ? '🌙 Oscuro' : '☀️ Claro'}
+          <div style={{ display: 'flex', gap: '8px', width: '130px' }}>
+            <button
+              onClick={() => setTema(tema === 'dark' ? 'light' : 'dark')}
+              onMouseEnter={() => setHoveredFooterButton('theme')}
+              onMouseLeave={() => setHoveredFooterButton(null)}
+              title={modoClaro ? 'Activar modo oscuro' : 'Activar modo claro'}
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '6px 10px',
+                backgroundColor: hoveredFooterButton === 'theme'
+                  ? (modoClaro ? 'rgba(16, 35, 61, 0.04)' : 'rgba(255, 255, 255, 0.05)')
+                  : 'transparent',
+                border: `1px solid ${ui.border}`,
+                borderRadius: '6px',
+                color: ui.text,
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 500,
+                transition: 'all 0.15s ease-in-out',
+              }}
+            >
+              {modoClaro ? (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
+                </svg>
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2" /><path d="M12 20v2" /><path d="M4.93 4.93l1.41 1.41" /><path d="M17.66 17.66l1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="M6.34 17.66l-1.41 1.41" /><path d="M19.07 4.93l-1.41 1.41" />
+                </svg>
+              )}
             </button>
-            <button onClick={() => {
-              localStorage.removeItem('dashboard_session');
-              router.push('/');
-            }} style={{
-              padding: '6px 12px', backgroundColor: '#E63946',
-              border: 'none', borderRadius: '8px',
-              color: 'white', cursor: 'pointer', fontSize: '12px',
-            }}>Cerrar Sesión</button>
+            <button
+              onClick={() => {
+                localStorage.removeItem('dashboard_session');
+                router.push('/');
+              }}
+              onMouseEnter={() => setHoveredFooterButton('logout')}
+              onMouseLeave={() => setHoveredFooterButton(null)}
+              title="Cerrar sesión"
+              style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '6px 10px',
+                backgroundColor: hoveredFooterButton === 'logout'
+                  ? 'rgba(230, 57, 70, 0.08)'
+                  : 'transparent',
+                border: hoveredFooterButton === 'logout'
+                  ? '1px solid rgba(230, 57, 70, 0.2)'
+                  : `1px solid ${ui.border}`,
+                borderRadius: '6px',
+                color: hoveredFooterButton === 'logout' ? '#E63946' : ui.mutedText,
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 500,
+                transition: 'all 0.15s ease-in-out',
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -1046,7 +1272,10 @@ export default function DashboardPage() {
                         transition: 'background-color 180ms ease, color 180ms ease, border-color 180ms ease, opacity 180ms ease, box-shadow 180ms ease, transform 180ms ease',
                       }}
                     >
-                      {accion.label}
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', verticalAlign: 'middle' }}>
+                        <accion.Icon />
+                        <span>{accion.label}</span>
+                      </span>
                     </button>
                   );
                 })}
@@ -1059,36 +1288,36 @@ export default function DashboardPage() {
               {/* Columna Izquierda: Tarjetas apiladas verticalmente */}
               <div className="flex flex-col gap-[16px]">
 
-                {/* 📍 Dirección aproximada */}
+                {/* Dirección aproximada */}
                 <div style={{
                   backgroundColor: ui.panel, borderRadius: '16px',
                   padding: '14px 16px', border: `1px solid ${ui.border}`,
                 }}>
-                  <h3 style={{ color: ui.mutedText, fontSize: '12px', margin: '0 0 6px' }}>
-                    📍 DIRECCIÓN APROXIMADA
+                  <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', margin: '0 0 6px 0' }}>
+                    DIRECCIÓN APROXIMADA
                   </h3>
                   <div style={{ fontSize: '15px', fontWeight: 'bold', wordBreak: 'break-word', color: ui.text }}>
                     {seleccionada.direccion_aproximada || 'No disponible'}
                   </div>
-                  <div style={{ color: ui.mutedText, fontSize: '13px', marginTop: '4px' }}>
+                  <div style={{ color: ui.mutedText, fontSize: '12px', marginTop: '4px' }}>
                     {seleccionada.creado_en ? formatFecha(seleccionada.creado_en) : '-'}
                   </div>
                 </div>
 
-                {/* 👥 Testigos */}
+                {/* Testigos */}
                 <div style={{
                   backgroundColor: ui.panel, borderRadius: '16px',
                   padding: '14px 16px', border: `1px solid ${ui.border}`,
                 }}>
-                  <h3 style={{ color: ui.mutedText, fontSize: '12px', margin: '0 0 6px' }}>
-                    👥 TESTIGOS
+                  <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', margin: '0 0 6px 0' }}>
+                    TESTIGOS
                   </h3>
                   <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
                     <div>
-                      <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#E63946', lineHeight: 1 }}>
+                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#E63946', lineHeight: 1 }}>
                         {seleccionada.testigos}
                       </div>
-                      <div style={{ color: ui.mutedText, fontSize: '13px', marginTop: '4px' }}>
+                      <div style={{ color: ui.mutedText, fontSize: '12px', marginTop: '4px' }}>
                         usuario(s) reportando
                       </div>
                     </div>
@@ -1100,31 +1329,41 @@ export default function DashboardPage() {
                         alignItems: 'center',
                         gap: '6px',
                         padding: '8px 14px',
-                        backgroundColor: '#4361EE22',
-                        border: '1px solid #4361EE44',
-                        borderRadius: '10px',
+                        backgroundColor: '#4361EE12',
+                        border: '1px solid #4361EE28',
+                        borderRadius: '8px',
                         color: '#4361EE',
                         cursor: 'pointer',
-                        fontSize: '13px',
+                        fontSize: '12.5px',
                         fontWeight: 'bold',
-                        transition: 'all 0.2s',
+                        transition: 'all 0.15s ease-in-out',
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#4361EE44')}
-                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#4361EE22')}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.backgroundColor = '#4361EE20';
+                        e.currentTarget.style.transform = 'translateY(-0.5px)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.backgroundColor = '#4361EE12';
+                        e.currentTarget.style.transform = 'none';
+                      }}
                     >
-                      👁️ Ver
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      Ver
                     </button>
                   </div>
                 </div>
 
-                {/* 🔍 Ver Detalles (Ciudadano + IA) */}
+                {/* Ver Detalles (Ciudadano + IA) */}
                 <div style={{
                   backgroundColor: ui.panel, borderRadius: '16px',
                   padding: '14px 16px', border: `1px solid ${ui.border}`,
                   display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                 }}>
-                  <h3 style={{ color: ui.mutedText, fontSize: '12px', margin: '0 0 6px' }}>
-                    🔍 DETALLES
+                  <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', margin: '0 0 6px 0' }}>
+                    DETALLES
                   </h3>
 
                   {/* Preview rápido */}
@@ -1137,12 +1376,15 @@ export default function DashboardPage() {
                     </div>
                     <div style={{
                       display: 'inline-flex', alignItems: 'center', gap: '6px',
-                      fontSize: '12px', fontWeight: 'bold',
+                      fontSize: '10px', fontWeight: 700,
+                      padding: '3px 8px', borderRadius: '12px',
+                      backgroundColor: colorEtiquetaIA[seleccionada.etiqueta_ia] + '18',
                       color: colorEtiquetaIA[seleccionada.etiqueta_ia],
+                      textTransform: 'uppercase',
                     }}>
-                      {seleccionada.etiqueta_ia === 'aprobado' ? '✅' :
-                        seleccionada.etiqueta_ia === 'revision_manual' ? '⚠️' : '❌'}
-                      {' '}{seleccionada.nivel_confianza_ia}% confianza IA
+                      {seleccionada.etiqueta_ia === 'aprobado' ? 'Aprobado' :
+                        seleccionada.etiqueta_ia === 'revision_manual' ? 'Revisión' : 'Rechazado'}
+                      {` (${seleccionada.nivel_confianza_ia}%)`}
                     </div>
                   </div>
 
@@ -1155,19 +1397,29 @@ export default function DashboardPage() {
                         alignItems: 'center',
                         gap: '6px',
                         padding: '8px 14px',
-                        backgroundColor: '#4361EE22',
-                        border: '1px solid #4361EE44',
-                        borderRadius: '10px',
+                        backgroundColor: '#4361EE12',
+                        border: '1px solid #4361EE28',
+                        borderRadius: '8px',
                         color: '#4361EE',
                         cursor: 'pointer',
-                        fontSize: '13px',
+                        fontSize: '12.5px',
                         fontWeight: 'bold',
-                        transition: 'all 0.2s',
+                        transition: 'all 0.15s ease-in-out',
                       }}
-                      onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#4361EE44')}
-                      onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#4361EE22')}
+                      onMouseEnter={e => {
+                        e.currentTarget.style.backgroundColor = '#4361EE20';
+                        e.currentTarget.style.transform = 'translateY(-0.5px)';
+                      }}
+                      onMouseLeave={e => {
+                        e.currentTarget.style.backgroundColor = '#4361EE12';
+                        e.currentTarget.style.transform = 'none';
+                      }}
                     >
-                      👁️ Ver evidencia
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      Ver evidencia
                     </button>
                   </div>
                 </div>

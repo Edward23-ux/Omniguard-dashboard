@@ -68,3 +68,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unexpected server error' }, { status: 500 });
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { emergenciaId, companiaId } = body;
+
+    if (!emergenciaId) {
+      return NextResponse.json({ error: 'ID de emergencia es requerido' }, { status: 400 });
+    }
+
+    // Actualizamos en Supabase usando el cliente admin (service role)
+    const { data, error } = await supabaseAdmin
+      .from('emergencias')
+      .update({ compania_asignada_id: companiaId || null })
+      .eq('id', emergenciaId)
+      .select();
+
+    if (error) {
+      console.error('API /api/companias (PATCH) - error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true, data }, { status: 200 });
+  } catch (err) {
+    console.error('API /api/companias (PATCH) - unexpected error:', err);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+  }
+}
+
