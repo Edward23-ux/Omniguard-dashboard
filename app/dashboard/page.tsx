@@ -6,6 +6,12 @@ import { supabase } from '@/lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
 import MapaEmergencia from '@/app/components/MapaEmergencia';
 import NuevaEmergenciaPopup from '@/app/components/NuevaEmergenciaPopup';
+import PanelDetalleEmergencia from '@/app/components/dashboard/PanelDetalleEmergencia';
+import PanelMapaCalor from '@/app/components/dashboard/PanelMapaCalor';
+import VistaVacia from '@/app/components/dashboard/VistaVacia';
+
+
+type VistaPrincipal = 'detalle' | 'mapaCalor' | 'vacio';
 
 const FILTROS = ['pendiente', 'en_proceso', 'culminado', 'falsa_alarma'];
 
@@ -168,6 +174,7 @@ function getAccionesPermitidas(estadoActual?: string) {
 
 export default function DashboardPage() {
   const [usuario, setUsuario] = useState<any>(null);
+  const [vistaActiva, setVistaActiva] = useState<VistaPrincipal>('vacio');
   const [emergencias, setEmergencias] = useState<any[]>([]);
   const [filtro, setFiltro] = useState('pendiente');
   const [tema, setTema] = useState<'dark' | 'light'>('dark');
@@ -1021,6 +1028,7 @@ export default function DashboardPage() {
                 key={e.id}
                 onClick={() => {
                   setSeleccionada(e);
+                  setVistaActiva('detalle');
                   if (pulsingEmergencies[e.id]) {
                     setPulsingEmergencies(prev => {
                       const copy = { ...prev };
@@ -1112,18 +1120,52 @@ export default function DashboardPage() {
           <span style={{ color: ui.softerText, fontSize: '11px', fontWeight: 500 }}>
             {emergenciasFiltradas.length} emergencias
           </span>
-          <div style={{ display: 'flex', gap: '8px', width: '130px' }}>
+          <div style={{ display: 'flex', gap: '6px', width: '220px', alignItems: 'center' }}>
+
+            {/* NUEVO BOTON MAPA DE CALOR */}
             <button
-              onClick={() => setTema(tema === 'dark' ? 'light' : 'dark')}
-              onMouseEnter={() => setHoveredFooterButton('theme')}
-              onMouseLeave={() => setHoveredFooterButton(null)}
-              title={modoClaro ? 'Activar modo oscuro' : 'Activar modo claro'}
+              onClick={() => {
+                setSeleccionada(null); // Deselecciona emergencia
+                setVistaActiva('mapaCalor');
+              }}
+              title="Ver Mapa de Calor Histórico"
               style={{
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '6px 10px',
+                height: '30px',
+                backgroundColor: vistaActiva === 'mapaCalor'
+                  ? (modoClaro ? 'rgba(230, 57, 70, 0.08)' : 'rgba(230, 57, 70, 0.15)')
+                  : 'transparent',
+                border: vistaActiva === 'mapaCalor'
+                  ? '1px solid rgba(230, 57, 70, 0.4)'
+                  : `1px solid ${ui.border}`,
+                borderRadius: '6px',
+                color: vistaActiva === 'mapaCalor' ? '#E63946' : ui.mutedText,
+                cursor: 'pointer',
+                fontSize: '11px',
+                fontWeight: 600,
+                transition: 'all 0.15s ease-in-out',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              Mapa de calor
+            </button>
+
+            {/* BOTÓN DE CAMBIO DE TEMA */}
+            <button
+              onClick={() => setTema(tema === 'dark' ? 'light' : 'dark')}
+              onMouseEnter={() => setHoveredFooterButton('theme')}
+              onMouseLeave={() => setHoveredFooterButton(null)}
+              title={modoClaro ? 'Activar modo oscuro' : 'Activar modo claro'}
+              style={{
+                width: '32px',
+                height: '30px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 backgroundColor: hoveredFooterButton === 'theme'
                   ? (modoClaro ? 'rgba(16, 35, 61, 0.04)' : 'rgba(255, 255, 255, 0.05)')
                   : 'transparent',
@@ -1131,8 +1173,6 @@ export default function DashboardPage() {
                 borderRadius: '6px',
                 color: ui.text,
                 cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 500,
                 transition: 'all 0.15s ease-in-out',
               }}
             >
@@ -1147,6 +1187,8 @@ export default function DashboardPage() {
                 </svg>
               )}
             </button>
+
+            {/* BOTÓN DE CERRAR SESIÓN */}
             <button
               onClick={() => {
                 localStorage.removeItem('dashboard_session');
@@ -1156,11 +1198,11 @@ export default function DashboardPage() {
               onMouseLeave={() => setHoveredFooterButton(null)}
               title="Cerrar sesión"
               style={{
-                flex: 1,
+                width: '32px',
+                height: '30px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '6px 10px',
                 backgroundColor: hoveredFooterButton === 'logout'
                   ? 'rgba(230, 57, 70, 0.08)'
                   : 'transparent',
@@ -1170,8 +1212,6 @@ export default function DashboardPage() {
                 borderRadius: '6px',
                 color: hoveredFooterButton === 'logout' ? '#E63946' : ui.mutedText,
                 cursor: 'pointer',
-                fontSize: '11px',
-                fontWeight: 500,
                 transition: 'all 0.15s ease-in-out',
               }}
             >
@@ -1181,283 +1221,38 @@ export default function DashboardPage() {
                 <line x1="21" y1="12" x2="9" y2="12" />
               </svg>
             </button>
+
           </div>
         </div>
       </div>
 
       {/* ── PANEL DERECHO ── */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        {seleccionada ? (
-          <div style={{ padding: '32px' }}>
-
-            {/* HEADER con título + estado + ACCIONES RÁPIDAS */}
-            <div style={{
-              backgroundColor: ui.panel,
-              borderRadius: '16px',
-              padding: '20px',
-              marginBottom: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '16px',
-              flexWrap: 'wrap',
-              border: `1px solid ${ui.border}`,
-              boxShadow: modoClaro ? '0 16px 40px rgba(16, 35, 61, 0.06)' : 'none',
-            }}>
-              <span style={{ fontSize: '40px' }}>{iconoTipo[seleccionada.tipo] || '🚨'}</span>
-              <div style={{ flex: 1 }}>
-                <h1 style={{ fontSize: '24px', fontWeight: 'bold', margin: 0, color: ui.text }}>
-                  {seleccionada.tipo}
-                </h1>
-                <p style={{ color: ui.mutedText, margin: '4px 0 0', fontSize: '12px' }}>
-                  ID: {seleccionada.id.slice(0, 8)}...
-                </p>
-              </div>
-
-              {/* Badge estado */}
-              <div style={{
-                padding: '8px 16px', borderRadius: '20px',
-                backgroundColor: colorEstado[seleccionada.estado] + '22',
-                color: colorEstado[seleccionada.estado],
-                fontWeight: 'bold', fontSize: '14px',
-              }}>
-                {seleccionada.estado.toUpperCase().replace('_', ' ')}
-              </div>
-
-              {/* Acciones rápidas */}
-              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                {ACCIONES_EMERGENCIA.map((accion) => {
-                  const esAccionPermitida = accionesPermitidas.includes(accion.estado);
-                  const esEstadoActual = estadoActualSeleccionado === accion.estado;
-                  const bloqueadoPorUnidades = sinUnidades && accion.estado === 'en_proceso';
-                  const deshabilitado = actualizando || esEstadoActual || !esAccionPermitida || bloqueadoPorUnidades;
-
-                  const backgroundColor = deshabilitado
-                    ? (modoClaro ? 'rgba(16, 35, 61, 0.05)' : 'rgba(255, 255, 255, 0.04)')
-                    : hexToRgba(accion.color, modoClaro ? 0.16 : 0.2);
-                  const textColor = deshabilitado
-                    ? hexToRgba(accion.color, modoClaro ? 0.62 : 0.72)
-                    : accion.color;
-                  const borderColor = deshabilitado
-                    ? hexToRgba(accion.color, modoClaro ? 0.18 : 0.24)
-                    : hexToRgba(accion.color, modoClaro ? 0.35 : 0.42);
-                  const boxShadow = deshabilitado
-                    ? 'none'
-                    : `0 10px 24px ${hexToRgba(accion.color, modoClaro ? 0.15 : 0.18)}`;
-
-                  const title = esEstadoActual
-                    ? 'Ya es el estado actual'
-                    : bloqueadoPorUnidades
-                      ? 'Sin unidades disponibles'
-                      : !esAccionPermitida
-                        ? 'No disponible para el estado actual'
-                        : '';
-
-                  return (
-                    <button
-                      key={accion.estado}
-                      onClick={() => actualizarEstado(seleccionada.id, accion.estado)}
-                      disabled={deshabilitado}
-                      title={title}
-                      style={{
-                        padding: '10px 16px',
-                        borderRadius: '12px',
-                        border: `1px solid ${borderColor}`,
-                        cursor: deshabilitado ? 'not-allowed' : 'pointer',
-                        backgroundColor,
-                        color: textColor,
-                        fontWeight: 800,
-                        fontSize: '13px',
-                        opacity: deshabilitado ? 0.56 : 1,
-                        boxShadow,
-                        transition: 'background-color 180ms ease, color 180ms ease, border-color 180ms ease, opacity 180ms ease, box-shadow 180ms ease, transform 180ms ease',
-                      }}
-                    >
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', verticalAlign: 'middle' }}>
-                        <accion.Icon />
-                        <span>{accion.label}</span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* ── SECCIÓN DE DETALLE DE DOS COLUMNAS ── */}
-            <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-[16px] mb-[16px] items-stretch">
-
-              {/* Columna Izquierda: Tarjetas apiladas verticalmente */}
-              <div className="flex flex-col gap-[16px]">
-
-                {/* Dirección aproximada */}
-                <div style={{
-                  backgroundColor: ui.panel, borderRadius: '16px',
-                  padding: '14px 16px', border: `1px solid ${ui.border}`,
-                }}>
-                  <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', margin: '0 0 6px 0' }}>
-                    DIRECCIÓN APROXIMADA
-                  </h3>
-                  <div style={{ fontSize: '15px', fontWeight: 'bold', wordBreak: 'break-word', color: ui.text }}>
-                    {seleccionada.direccion_aproximada || 'No disponible'}
-                  </div>
-                  <div style={{ color: ui.mutedText, fontSize: '12px', marginTop: '4px' }}>
-                    {seleccionada.creado_en ? formatFecha(seleccionada.creado_en) : '-'}
-                  </div>
-                </div>
-
-                {/* Testigos */}
-                <div style={{
-                  backgroundColor: ui.panel, borderRadius: '16px',
-                  padding: '14px 16px', border: `1px solid ${ui.border}`,
-                }}>
-                  <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', margin: '0 0 6px 0' }}>
-                    TESTIGOS
-                  </h3>
-                  <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
-                    <div>
-                      <div style={{ fontSize: '32px', fontWeight: 'bold', color: '#E63946', lineHeight: 1 }}>
-                        {seleccionada.testigos}
-                      </div>
-                      <div style={{ color: ui.mutedText, fontSize: '12px', marginTop: '4px' }}>
-                        usuario(s) reportando
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => verTestigos(seleccionada)}
-                      title="Ver lista de testigos"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 14px',
-                        backgroundColor: '#4361EE12',
-                        border: '1px solid #4361EE28',
-                        borderRadius: '8px',
-                        color: '#4361EE',
-                        cursor: 'pointer',
-                        fontSize: '12.5px',
-                        fontWeight: 'bold',
-                        transition: 'all 0.15s ease-in-out',
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.backgroundColor = '#4361EE20';
-                        e.currentTarget.style.transform = 'translateY(-0.5px)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.backgroundColor = '#4361EE12';
-                        e.currentTarget.style.transform = 'none';
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                      Ver
-                    </button>
-                  </div>
-                </div>
-
-                {/* Ver Detalles (Ciudadano + IA) */}
-                <div style={{
-                  backgroundColor: ui.panel, borderRadius: '16px',
-                  padding: '14px 16px', border: `1px solid ${ui.border}`,
-                  display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-                }}>
-                  <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', margin: '0 0 6px 0' }}>
-                    DETALLES
-                  </h3>
-
-                  {/* Preview rápido */}
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: '14px', fontWeight: 'bold', color: ui.text, marginBottom: '4px' }}>
-                      {seleccionada.usuarios?.nombres} {seleccionada.usuarios?.apellidos}
-                    </div>
-                    <div style={{ fontSize: '12px', color: ui.mutedText, marginBottom: '8px' }}>
-                      DNI: {seleccionada.usuarios?.dni}
-                    </div>
-                    <div style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '6px',
-                      fontSize: '10px', fontWeight: 700,
-                      padding: '3px 8px', borderRadius: '12px',
-                      backgroundColor: colorEtiquetaIA[seleccionada.etiqueta_ia] + '18',
-                      color: colorEtiquetaIA[seleccionada.etiqueta_ia],
-                      textTransform: 'uppercase',
-                    }}>
-                      {seleccionada.etiqueta_ia === 'aprobado' ? 'Aprobado' :
-                        seleccionada.etiqueta_ia === 'revision_manual' ? 'Revisión' : 'Rechazado'}
-                      {` (${seleccionada.nivel_confianza_ia}%)`}
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: '12px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button
-                      onClick={() => console.log('Ver evidencia clickeado')}
-                      title="Ver evidencia de la emergencia"
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '8px 14px',
-                        backgroundColor: '#4361EE12',
-                        border: '1px solid #4361EE28',
-                        borderRadius: '8px',
-                        color: '#4361EE',
-                        cursor: 'pointer',
-                        fontSize: '12.5px',
-                        fontWeight: 'bold',
-                        transition: 'all 0.15s ease-in-out',
-                      }}
-                      onMouseEnter={e => {
-                        e.currentTarget.style.backgroundColor = '#4361EE20';
-                        e.currentTarget.style.transform = 'translateY(-0.5px)';
-                      }}
-                      onMouseLeave={e => {
-                        e.currentTarget.style.backgroundColor = '#4361EE12';
-                        e.currentTarget.style.transform = 'none';
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                        <circle cx="12" cy="12" r="3" />
-                      </svg>
-                      Ver evidencia
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Columna Derecha: Mapa de ubicación */}
-              <div style={{
-                backgroundColor: ui.panel, borderRadius: '16px',
-                padding: '20px',
-                border: `1px solid ${ui.border}`,
-                display: 'flex',
-                flexDirection: 'column',
-              }} className="h-[350px] lg:h-auto">
-                <h3 style={{ color: ui.mutedText, fontSize: '12px', margin: '0 0 12px' }}>
-                  🗺️ UBICACIÓN DE LA EMERGENCIA
-                </h3>
-                <div style={{ flex: 1, minHeight: '280px', borderRadius: '12px', overflow: 'hidden' }}>
-                  <MapaEmergencia ubicacion={seleccionada.ubicacion} tema={tema} />
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-        ) : (
-          <div style={{
-            height: '100%', display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', color: ui.mutedText,
-          }}>
-            <div style={{ fontSize: '64px', marginBottom: '16px' }}>🛡️</div>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: ui.text }}>
-              OmniGuard Dashboard
-            </div>
-            <div style={{ marginTop: '8px', fontSize: '14px' }}>
-              Selecciona una emergencia para ver los detalles
-            </div>
-          </div>
+        
+        {vistaActiva === 'mapaCalor' && (
+          <PanelMapaCalor ui={ui} tema={tema} />
         )}
+
+        {vistaActiva === 'detalle' && seleccionada && (
+          <PanelDetalleEmergencia 
+            seleccionada={seleccionada}
+            ui={ui}
+            tema={tema}
+            accionesPermitidas={accionesPermitidas}
+            estadoActualSeleccionado={estadoActualSeleccionado}
+            sinUnidades={sinUnidades}
+            actualizando={actualizando}
+            actualizarEstado={actualizarEstado}
+            ACCIONES_EMERGENCIA={ACCIONES_EMERGENCIA}
+            formatFecha={formatFecha}
+            verTestigos={verTestigos}
+          />
+        )}
+
+        {vistaActiva === 'vacio' && (
+          <VistaVacia ui={ui} />
+        )}
+        
       </div>
     </div>
   );
