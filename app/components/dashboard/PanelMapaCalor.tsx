@@ -29,27 +29,52 @@ export default function PanelMapaCalor({ ui, tema }: PanelMapaCalorProps) {
         { value: '11', label: 'Noviembre' }, { value: '12', label: 'Diciembre' }
     ];
 
-    // 1. Fetch histórico independiente
+    // 1. Fetch histórico independiente con filtro real por fecha
     useEffect(() => {
         const cargarHistorico = async () => {
             setCargando(true);
             try {
-                // Usamos tu RPC existente para no crear nada nuevo en BDD
+                // Obtener fecha de creación de cada emergencia
+                const { data: emergenciasData } = await supabase
+                    .from('emergencias')
+                    .select('id, creado_en');
+
+                // Obtener ubicaciones desde la función RPC
                 const { data: ubicaciones } = await supabase.rpc('get_todas_ubicaciones');
 
-                if (ubicaciones) {
+                if (ubicaciones && emergenciasData) {
+                    // Mapear id a creado_en para cruzar los datos
+                    const mapaFechas = new Map<string, string>(
+                        emergenciasData.map((e: any) => [e.id, e.creado_en])
+                    );
+
                     const coords = ubicaciones.map((u: any) => {
                         const match = u.ubicacion_texto.match(/POINT\(([^ ]+) ([^)]+)\)/);
                         if (match) {
-                            return [parseFloat(match[2]), parseFloat(match[1]), 1]; // [lat, lng, intensidad]
+                            const creadoEn = mapaFechas.get(u.id);
+                            return {
+                                lat: parseFloat(match[2]),
+                                lng: parseFloat(match[1]),
+                                creadoEn: creadoEn || null
+                            };
                         }
                         return null;
                     }).filter((c: any) => c !== null);
 
-                    // Simulando filtro por mes (Para un filtro real por fecha, necesitaríamos
-                    // que get_todas_ubicaciones devuelva el 'creado_en', o hacer el fetch a 'emergencias'
-                    // directamente. Aquí asumiremos que filtras el array si tienes la fecha, o haces un fetch directo)
-                    setCoordenadasHist(coords);
+                    // Filtrar por el mes seleccionado
+                    const filtradas = coords.filter((c: any) => {
+                        if (mesSeleccionado === 'todos') return true;
+                        if (!c.creadoEn) return false;
+
+                        // creadoEn tiene formato YYYY-MM-DD...
+                        const mes = c.creadoEn.substring(5, 7);
+                        return mes === mesSeleccionado;
+                    });
+
+                    // Convertir al formato requerido por leaflet.heat: [lat, lng, intensidad]
+                    const heatCoords = filtradas.map((c: any) => [c.lat, c.lng, 1]);
+
+                    setCoordenadasHist(heatCoords);
                 }
             } catch (error) {
                 console.error('Error cargando histórico:', error);
@@ -94,18 +119,21 @@ export default function PanelMapaCalor({ ui, tema }: PanelMapaCalorProps) {
 
     // 3. Actualizar la capa de calor cuando cambia la data
     useEffect(() => {
-        if (!mapRef.current || !LRef.current || !coordenadasHist.length) return;
+        if (!mapRef.current || !LRef.current) return;
 
         if (heatLayerRef.current) {
             mapRef.current.removeLayer(heatLayerRef.current);
+            heatLayerRef.current = null;
         }
 
-        heatLayerRef.current = (LRef.current as any).heatLayer(coordenadasHist, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 15,
-            gradient: { 0.4: 'blue', 0.6: 'cyan', 0.7: 'lime', 0.8: 'yellow', 1.0: 'red' }
-        }).addTo(mapRef.current);
+        if (coordenadasHist.length > 0) {
+            heatLayerRef.current = (LRef.current as any).heatLayer(coordenadasHist, {
+                radius: 25,
+                blur: 15,
+                maxZoom: 15,
+                gradient: { 0.4: 'blue', 0.6: 'cyan', 0.7: 'lime', 0.8: 'yellow', 1.0: 'red' }
+            }).addTo(mapRef.current);
+        }
 
     }, [coordenadasHist]);
 

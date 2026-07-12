@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [tema, setTema] = useState<'dark' | 'light'>('dark');
   const [mounted, setMounted] = useState(false);
-  
+
   // Interactive UI States
   const [focusedInput, setFocusedInput] = useState<'email' | 'password' | null>(null);
   const [hoveredButton, setHoveredButton] = useState<'theme' | 'submit' | null>(null);
@@ -179,8 +179,8 @@ export default function LoginPage() {
           height: '40px',
           borderRadius: '10px',
           border: `1px solid ${ui.border}`,
-          backgroundColor: hoveredButton === 'theme' 
-            ? (modoClaro ? 'rgba(16, 35, 61, 0.04)' : 'rgba(255, 255, 255, 0.05)') 
+          backgroundColor: hoveredButton === 'theme'
+            ? (modoClaro ? 'rgba(16, 35, 61, 0.04)' : 'rgba(255, 255, 255, 0.05)')
             : ui.panel,
           color: ui.text,
           display: 'flex',
@@ -194,12 +194,12 @@ export default function LoginPage() {
       >
         {modoClaro ? (
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
           </svg>
         ) : (
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/>
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2" /><path d="M12 20v2" /><path d="M4.93 4.93l1.41 1.41" /><path d="M17.66 17.66l1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="M6.34 17.66l-1.41 1.41" /><path d="M19.07 4.93l-1.41 1.41" />
           </svg>
         )}
       </button>
@@ -214,7 +214,7 @@ export default function LoginPage() {
         boxShadow: modoClaro ? '0 20px 50px rgba(16, 35, 61, 0.06)' : '0 16px 40px rgba(0, 0, 0, 0.4)',
         border: `1px solid ${ui.border}`,
       }}>
-        
+
         {/* Logo and Identity */}
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
           <div style={{
@@ -229,7 +229,7 @@ export default function LoginPage() {
             marginBottom: '20px',
           }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
           <h1 style={{ color: ui.text, fontSize: '22px', fontWeight: 700, letterSpacing: '-0.02em', margin: '0 0 6px 0' }}>
@@ -242,7 +242,7 @@ export default function LoginPage() {
 
         {/* Credentials Form */}
         <form onSubmit={handleSubmit}>
-          
+
           {/* Email Input */}
           <div style={{ marginBottom: '20px' }}>
             <label style={{
@@ -255,9 +255,35 @@ export default function LoginPage() {
               Correo Electrónico
             </label>
             <input
-              type="email"
+              type="text"
+              inputMode="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === '@' || e.key === '.') {
+                  e.preventDefault();
+                }
+              }}
+              onChange={(e) => {
+                const input = e.target;
+                const val = input.value;
+                const parts = val.split('@');
+                const rawUsername = parts[0] || '';
+                const username = rawUsername.replace(/[@.]/g, '');
+                
+                let selectionStart = input.selectionStart || 0;
+                if (selectionStart > username.length) {
+                  selectionStart = username.length;
+                }
+
+                if (username.length > 0) {
+                  setEmail(username + '@omniguard.pe');
+                  requestAnimationFrame(() => {
+                    input.setSelectionRange(selectionStart, selectionStart);
+                  });
+                } else {
+                  setEmail('');
+                }
+              }}
               onFocus={() => setFocusedInput('email')}
               onBlur={() => setFocusedInput(null)}
               required
@@ -332,7 +358,7 @@ export default function LoginPage() {
               opacity: isLoading ? 0.7 : 1,
               transform: hoveredButton === 'submit' && !isLoading ? 'translateY(-1px)' : 'none',
               boxShadow: hoveredButton === 'submit' && !isLoading
-                ? '0 10px 24px rgba(230, 57, 70, 0.25)' 
+                ? '0 10px 24px rgba(230, 57, 70, 0.25)'
                 : 'none',
               transition: 'all 0.2s ease-in-out',
             }}
