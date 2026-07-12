@@ -137,9 +137,9 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
               }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
-                <line x1="12" y1="9" x2="12" y2="13"/>
-                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
               </svg>
             </div>
 
@@ -210,10 +210,13 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
 
             <div style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: colors.cardBg, border: `1px solid ${colors.border}` }}>
               <div style={{ color: colors.mutedText, fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                Confianza IA
+                Dirección aproximada
               </div>
-              <div style={{ color: colorEtiquetaIA[etiquetaIA] || colors.text, fontSize: '14px', fontWeight: 600, marginTop: '4px' }}>
-                {confianza !== null ? `${confianza}%` : 'N/D'}
+              <div style={{ color: colors.text, fontSize: '13.5px', fontWeight: 500, marginTop: '4px', lineHeight: 1.4 }}>
+                {emergencia.direccion_aproximada || 'No disponible'}
+              </div>
+              <div style={{ color: colors.softerText, fontSize: '11px', marginTop: '6px' }}>
+                {formatFecha(emergencia.creado_en)}
               </div>
             </div>
           </div>
@@ -227,18 +230,6 @@ export default function NuevaEmergenciaPopup({ emergencia, onClose, onVerDetalle
             </div>
             <div style={{ color: colors.mutedText, fontSize: '12px', marginTop: '2px' }}>
               DNI: {emergencia.usuarios?.dni || 'N/D'}
-            </div>
-          </div>
-
-          <div style={{ padding: '10px 12px', borderRadius: '10px', backgroundColor: colors.cardBg, border: `1px solid ${colors.border}` }}>
-            <div style={{ color: colors.mutedText, fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Dirección aproximada
-            </div>
-            <div style={{ color: colors.text, fontSize: '13.5px', fontWeight: 500, marginTop: '4px', lineHeight: 1.4 }}>
-              {emergencia.direccion_aproximada || 'No disponible'}
-            </div>
-            <div style={{ color: colors.softerText, fontSize: '11px', marginTop: '6px' }}>
-              {formatFecha(emergencia.creado_en)}
             </div>
           </div>
         </div>

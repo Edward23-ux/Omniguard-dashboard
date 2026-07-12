@@ -287,7 +287,7 @@ export default function DashboardPage() {
         .from('emergencias')
         .select(`
           id, tipo, estado, etiqueta_ia, testigos,
-          direccion_aproximada, nivel_confianza_ia,
+          direccion_aproximada, nivel_confianza_ia, foto_url, descripcion,
           creado_en, actualizado_en, compania_asignada_id, usuario_id,
           companias_bomberos (nombre, telefono),
           usuarios (dni, nombres, apellidos)

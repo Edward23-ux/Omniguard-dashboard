@@ -26,6 +26,8 @@ export default function PanelDetalleEmergencia({
     verTestigos
 }: any) {
     const modoClaro = tema === 'light';
+    const [verEvidencia, setVerEvidencia] = React.useState(false);
+    const [errorImagen, setErrorImagen] = React.useState(false);
 
     return (
         <div style={{ padding: '32px' }}>
@@ -143,28 +145,175 @@ export default function PanelDetalleEmergencia({
                     </div>
 
                     {/* Detalles IA */}
-                    <div style={{ backgroundColor: ui.panel, borderRadius: '16px', padding: '14px 16px', border: `1px solid ${ui.border}` }}>
-                        <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, margin: '0 0 6px 0' }}>DETALLES</h3>
-                        <div style={{ fontSize: '14px', fontWeight: 'bold', color: ui.text }}>{seleccionada.usuarios?.nombres} {seleccionada.usuarios?.apellidos}</div>
-                        <div style={{ fontSize: '12px', color: ui.mutedText, marginBottom: '8px' }}>DNI: {seleccionada.usuarios?.dni}</div>
-                        <div style={{
-                            display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700,
-                            padding: '3px 8px', borderRadius: '12px', backgroundColor: colorEtiquetaIA[seleccionada.etiqueta_ia] + '18',
-                            color: colorEtiquetaIA[seleccionada.etiqueta_ia], textTransform: 'uppercase'
-                        }}>
-                            {seleccionada.etiqueta_ia} ({seleccionada.nivel_confianza_ia}%)
+                    <div style={{
+                        backgroundColor: ui.panel,
+                        borderRadius: '16px',
+                        padding: '14px 16px',
+                        border: `1px solid ${ui.border}`,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '12px'
+                    }}>
+                        <div style={{ flex: 1 }}>
+                            <h3 style={{ color: ui.mutedText, fontSize: '11px', fontWeight: 700, margin: '0 0 6px 0' }}>DETALLES</h3>
+                            <div style={{ fontSize: '14px', fontWeight: 'bold', color: ui.text }}>{seleccionada.usuarios?.nombres} {seleccionada.usuarios?.apellidos}</div>
+                            <div style={{ fontSize: '12px', color: ui.mutedText, marginBottom: '8px' }}>DNI: {seleccionada.usuarios?.dni}</div>
+                            {seleccionada.foto_url && (
+                                <div style={{
+                                    display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '10px', fontWeight: 700,
+                                    padding: '3px 8px', borderRadius: '12px', backgroundColor: colorEtiquetaIA[seleccionada.etiqueta_ia] + '18',
+                                    color: colorEtiquetaIA[seleccionada.etiqueta_ia], textTransform: 'uppercase'
+                                }}>
+                                    {seleccionada.etiqueta_ia} ({seleccionada.nivel_confianza_ia}%)
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            {seleccionada.foto_url ? (
+                                <button
+                                    onClick={() => {
+                                        setErrorImagen(false);
+                                        setVerEvidencia(true);
+                                    }}
+                                    style={{
+                                        padding: '8px 14px',
+                                        backgroundColor: '#4361EE12',
+                                        border: '1px solid #4361EE28',
+                                        borderRadius: '8px',
+                                        color: '#4361EE',
+                                        cursor: 'pointer',
+                                        fontSize: '12.5px',
+                                        fontWeight: 'bold',
+                                        transition: 'all 0.2s'
+                                    }}
+                                >
+                                    Ver evidencia
+                                </button>
+                            ) : (
+                                <button
+                                    disabled
+                                    style={{
+                                        padding: '8px 14px',
+                                        backgroundColor: ui.border,
+                                        border: `1px solid ${ui.border}`,
+                                        borderRadius: '8px',
+                                        color: ui.mutedText,
+                                        cursor: 'not-allowed',
+                                        fontSize: '12.5px',
+                                        fontWeight: 'bold',
+                                        opacity: 0.6
+                                    }}
+                                >
+                                    Sin evidencia
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
 
                 {/* Mapa */}
                 <div style={{ backgroundColor: ui.panel, borderRadius: '16px', padding: '20px', border: `1px solid ${ui.border}`, display: 'flex', flexDirection: 'column' }} className="h-[350px] lg:h-auto">
-                    <h3 style={{ color: ui.mutedText, fontSize: '12px', margin: '0 0 12px' }}>🗺️ UBICACIÓN DE LA EMERGENCIA</h3>
+                    <h3 style={{ color: ui.mutedText, fontSize: '12px', margin: '0 0 12px' }}>UBICACIÓN DE LA EMERGENCIA</h3>
                     <div style={{ flex: 1, minHeight: '280px', borderRadius: '12px', overflow: 'hidden' }}>
                         <MapaEmergencia ubicacion={seleccionada.ubicacion} tema={tema} />
                     </div>
                 </div>
             </div>
+
+            {/* Modal Lightbox Evidencia */}
+            {verEvidencia && seleccionada.foto_url && (
+                <div
+                    onClick={() => setVerEvidencia(false)}
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        backgroundColor: 'rgba(0,0,0,0.85)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 99999,
+                        backdropFilter: 'blur(6px)',
+                        padding: '24px',
+                    }}
+                >
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        style={{
+                            position: 'relative',
+                            backgroundColor: ui.panel,
+                            borderRadius: '20px',
+                            border: `1px solid ${ui.border}`,
+                            padding: '20px',
+                            maxWidth: '90vw',
+                            maxHeight: '85vh',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
+                        }}
+                    >
+                        {/* Header del Lightbox */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', marginBottom: '16px', gap: '20px' }}>
+                            <div style={{ fontWeight: 'bold', color: ui.text, fontSize: '16px' }}>Evidencia de Emergencia</div>
+                            <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                                <button
+                                    onClick={() => setVerEvidencia(false)}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: ui.text,
+                                        fontSize: '20px',
+                                        cursor: 'pointer',
+                                        lineHeight: 1,
+                                    }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Imagen o Error */}
+                        {errorImagen ? (
+                            <div style={{ padding: '40px 20px', color: '#E63946', textAlign: 'center', fontWeight: 'bold' }}>
+                                ⚠️ Error al cargar la evidencia (URL expirada o rota)
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%' }}>
+                                <img
+                                    src={seleccionada.foto_url}
+                                    alt="Evidencia"
+                                    onError={() => setErrorImagen(true)}
+                                    style={{
+                                        maxWidth: '100%',
+                                        maxHeight: '65vh',
+                                        objectFit: 'contain',
+                                        borderRadius: '12px',
+                                    }}
+                                />
+                                {seleccionada.descripcion && (
+                                    <div style={{
+                                        marginTop: '16px',
+                                        padding: '12px 16px',
+                                        backgroundColor: modoClaro ? 'rgba(0,0,0,0.03)' : 'rgba(255,255,255,0.04)',
+                                        borderRadius: '10px',
+                                        color: ui.text,
+                                        fontSize: '13.5px',
+                                        lineHeight: '1.5',
+                                        maxWidth: '100%',
+                                        textAlign: 'center',
+                                        borderLeft: '3px solid #4361EE',
+                                        fontStyle: 'italic'
+                                    }}>
+                                        "{seleccionada.descripcion}"
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

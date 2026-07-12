@@ -29,7 +29,7 @@ export function useEmergencias() {
             .from('emergencias')
             .select(`
         id, tipo, estado, etiqueta_ia, nivel_confianza_ia, testigos,
-        direccion_aproximada, creado_en, compania_asignada_id,
+        direccion_aproximada, creado_en, compania_asignada_id, foto_url, descripcion,
         companias_bomberos (nombre, telefono),
         usuarios (dni, nombres, apellidos)
       `)
