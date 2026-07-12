@@ -898,7 +898,7 @@ export default function DashboardPage() {
               }}>
                 <div>
                   <h2 style={{ margin: 0, fontSize: '18px', fontWeight: 'bold' }}>
-                    👥 Testigos de la Emergencia
+                    Testigos de la Emergencia
                   </h2>
                   <p style={{ margin: '4px 0 0', color: ui.mutedText, fontSize: '13px' }}>
                     {iconoTipo[modalTestigos.tipo]} {modalTestigos.tipo} — {testigos.length} persona(s)
@@ -1228,13 +1228,13 @@ export default function DashboardPage() {
 
       {/* ── PANEL DERECHO ── */}
       <div style={{ flex: 1, overflowY: 'auto' }}>
-        
+
         {vistaActiva === 'mapaCalor' && (
           <PanelMapaCalor ui={ui} tema={tema} />
         )}
 
         {vistaActiva === 'detalle' && seleccionada && (
-          <PanelDetalleEmergencia 
+          <PanelDetalleEmergencia
             seleccionada={seleccionada}
             ui={ui}
             tema={tema}
@@ -1252,7 +1252,7 @@ export default function DashboardPage() {
         {vistaActiva === 'vacio' && (
           <VistaVacia ui={ui} />
         )}
-        
+
       </div>
     </div>
   );
