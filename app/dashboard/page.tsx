@@ -1143,7 +1143,7 @@ export default function DashboardPage() {
                               fontSize: '13px',
                               whiteSpace: 'nowrap',
                             }}>
-                              {formatFecha(t.fecha)}
+                              {hora}
                             </td>
                           </tr>
                         );
