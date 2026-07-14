@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     // Comparar contraseña (temporal: texto plano)
     // Las contraseñas que insertamos son 'admin123' y 'bomberos123'
     const passwordValida = (password === 'admin123' || password === 'bomberos123');
-    
+
     console.log('🔐 Contraseña válida?', passwordValida);
 
     if (!passwordValida) {

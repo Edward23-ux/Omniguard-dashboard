@@ -15,8 +15,20 @@ export default function PanelMapaCalor({ ui, tema }: PanelMapaCalorProps) {
     const mapRef = useRef<any>(null);
     const heatLayerRef = useRef<any>(null);
     const LRef = useRef<any>(null); // Guardar referencia a Leaflet
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const modoClaro = tema === 'light';
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Opciones de meses para el filtro
     const meses = [
@@ -152,19 +164,127 @@ export default function PanelMapaCalor({ ui, tema }: PanelMapaCalorProps) {
                         </p>
                     </div>
 
-                    <select
-                        value={mesSeleccionado}
-                        onChange={(e) => setMesSeleccionado(e.target.value)}
-                        style={{
-                            padding: '10px 16px', borderRadius: '8px',
-                            backgroundColor: ui.surface, color: ui.text, border: `1px solid ${ui.border}`,
-                            outline: 'none', cursor: 'pointer', fontWeight: 'bold'
-                        }}
-                    >
-                        {meses.map(m => (
-                            <option key={m.value} value={m.value}>{m.label}</option>
-                        ))}
-                    </select>
+                    <div ref={containerRef} style={{ position: 'relative' }}>
+                        <button
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px',
+                                padding: '10px 16px',
+                                borderRadius: '12px',
+                                backgroundColor: ui.surface,
+                                color: ui.text,
+                                border: `1px solid ${ui.border}`,
+                                outline: 'none',
+                                cursor: 'pointer',
+                                fontWeight: 700,
+                                fontSize: '13.5px',
+                                boxShadow: modoClaro ? '0 4px 12px rgba(16, 35, 61, 0.03)' : 'none',
+                                transition: 'all 0.15s ease',
+                            }}
+                        >
+                            <span>{meses.find(m => m.value === mesSeleccionado)?.label}</span>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2.5"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                style={{
+                                    transform: dropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                                    transition: 'transform 0.2s ease',
+                                    color: ui.mutedText
+                                }}
+                            >
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </button>
+
+                        {dropdownOpen && (
+                            <div style={{
+                                position: 'absolute',
+                                top: 'calc(100% + 8px)',
+                                right: 0,
+                                width: '280px',
+                                backgroundColor: ui.panel,
+                                border: `1px solid ${ui.border}`,
+                                borderRadius: '16px',
+                                padding: '12px',
+                                boxShadow: '0 20px 48px rgba(0, 0, 0, 0.15)',
+                                zIndex: 9999,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                                animation: 'fadeInUp 0.18s ease-out'
+                            }}>
+                                <button
+                                    onClick={() => {
+                                        setMesSeleccionado('todos');
+                                        setDropdownOpen(false);
+                                    }}
+                                    style={{
+                                        width: '100%',
+                                        padding: '10px 12px',
+                                        borderRadius: '8px',
+                                        border: 'none',
+                                        backgroundColor: mesSeleccionado === 'todos' ? '#E63946' : 'transparent',
+                                        color: mesSeleccionado === 'todos' ? '#FFFFFF' : ui.text,
+                                        fontWeight: 600,
+                                        textAlign: 'center',
+                                        cursor: 'pointer',
+                                        fontSize: '13px',
+                                        transition: 'all 0.15s ease',
+                                    }}
+                                >
+                                    Todo el Histórico
+                                </button>
+
+                                <div style={{
+                                    height: '1px',
+                                    backgroundColor: ui.border,
+                                    margin: '4px 0'
+                                }} />
+
+                                <div style={{
+                                    display: 'grid',
+                                    gridTemplateColumns: 'repeat(3, 1fr)',
+                                    gap: '6px'
+                                }}>
+                                    {meses.slice(1).map(m => {
+                                        const activo = mesSeleccionado === m.value;
+                                        return (
+                                            <button
+                                                key={m.value}
+                                                onClick={() => {
+                                                    setMesSeleccionado(m.value);
+                                                    setDropdownOpen(false);
+                                                }}
+                                                style={{
+                                                    padding: '8px 4px',
+                                                    borderRadius: '8px',
+                                                    border: 'none',
+                                                    backgroundColor: activo ? '#E63946' : (modoClaro ? 'rgba(16, 35, 61, 0.03)' : 'rgba(255, 255, 255, 0.04)'),
+                                                    color: activo ? '#FFFFFF' : ui.text,
+                                                    fontWeight: 500,
+                                                    textAlign: 'center',
+                                                    cursor: 'pointer',
+                                                    fontSize: '12.5px',
+                                                    transition: 'all 0.15s ease',
+                                                }}
+                                            >
+                                                {m.label.substring(0, 3)}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Contenedor del Mapa */}

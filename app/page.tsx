@@ -87,6 +87,29 @@ export default function LoginPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        const toastId = toast.loading(
+          <span style={{ fontWeight: 500, fontSize: '13.5px' }}>Verificando credenciales...</span>,
+          {
+            icon: (
+              <div style={{
+                width: '16px',
+                height: '16px',
+                border: '2px solid rgba(230, 57, 70, 0.2)',
+                borderTopColor: '#E63946',
+                borderRadius: '50%',
+                animation: 'spin 0.8s linear infinite'
+              }} />
+            ),
+            style: {
+              background: modoClaro ? '#FFFFFF' : '#161616',
+              color: ui.text,
+              border: `1px solid ${ui.border}`,
+              borderRadius: '12px',
+              padding: '12px 16px',
+            }
+          }
+        );
+
         // Guardar sesión (expira en 8 horas)
         const session = {
           usuarioId: data.usuario.id,
@@ -98,12 +121,53 @@ export default function LoginPage() {
         };
         localStorage.setItem('dashboard_session', JSON.stringify(session));
 
-        toast.success(`Bienvenido ${data.usuario.nombre}`);
+        // Simular retardo para un feedback de transición suave (UX)
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        toast.success(
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontWeight: 600, fontSize: '14px', color: ui.text }}>¡Acceso Concedido!</span>
+            <span style={{ fontSize: '12.5px', color: ui.mutedText }}>
+              Bienvenido, {data.usuario.nombre}
+            </span>
+          </div>,
+          {
+            id: toastId,
+            icon: (
+              <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '20px',
+                height: '20px',
+                backgroundColor: 'rgba(46, 204, 113, 0.15)',
+                color: '#2ECC71',
+                borderRadius: '50%',
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}>
+                ✓
+              </span>
+            ),
+            style: {
+              background: modoClaro ? '#FFFFFF' : '#161616',
+              color: ui.text,
+              border: `1px solid ${ui.border}`,
+              borderRadius: '12px',
+              padding: '12px 16px',
+            },
+            duration: 2000,
+          }
+        );
+
+        // Pequeño retardo adicional para que el usuario aprecie el estado de éxito antes de la redirección
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         // Redirigir según rol
         if (data.usuario.rol === 'admin') {
           router.push('/admin');
         } else {
+          localStorage.setItem('omniguard-dashboard-theme', 'light');
           router.push('/dashboard');
         }
       } else {
@@ -162,6 +226,12 @@ export default function LoginPage() {
       fontFamily: 'system-ui, -apple-system, sans-serif',
     }}>
       <Toaster position="top-right" />
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
 
       {/* Modern Theme Switcher Button */}
       <button
@@ -269,7 +339,7 @@ export default function LoginPage() {
                 const parts = val.split('@');
                 const rawUsername = parts[0] || '';
                 const username = rawUsername.replace(/[@.]/g, '');
-                
+
                 let selectionStart = input.selectionStart || 0;
                 if (selectionStart > username.length) {
                   selectionStart = username.length;

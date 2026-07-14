@@ -51,7 +51,7 @@ export function useNuevaCompania() {
         if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
             setMapDraftCoords({ lat, lng });
         } else {
-            setMapDraftCoords({ lat: -12.0464, lng: -77.0428 });
+            setMapDraftCoords({ lat: -6.7714, lng: -79.8386 });
         }
         setIsMapPickerOpen(true);
     };

@@ -177,7 +177,7 @@ export default function DashboardPage() {
   const [vistaActiva, setVistaActiva] = useState<VistaPrincipal>('vacio');
   const [emergencias, setEmergencias] = useState<any[]>([]);
   const [filtro, setFiltro] = useState('pendiente');
-  const [tema, setTema] = useState<'dark' | 'light'>('dark');
+  const [tema, setTema] = useState<'dark' | 'light'>('light');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -185,7 +185,7 @@ export default function DashboardPage() {
     const temaGuardado = localStorage.getItem(THEME_STORAGE_KEY);
     if (temaGuardado === 'dark' || temaGuardado === 'light') {
       setTema(temaGuardado);
-    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+    } else {
       setTema('light');
     }
   }, []);
@@ -393,6 +393,29 @@ export default function DashboardPage() {
 
   const actualizarEstado = async (id: string, nuevoEstado: string) => {
     setActualizando(true);
+    const toastId = toast.loading(
+      <span style={{ fontWeight: 500, fontSize: '13.5px' }}>Actualizando estado...</span>,
+      {
+        icon: (
+          <div style={{
+            width: '16px',
+            height: '16px',
+            border: '2px solid rgba(230, 57, 70, 0.2)',
+            borderTopColor: '#E63946',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite'
+          }} />
+        ),
+        style: {
+          background: modoClaro ? '#FFFFFF' : '#161616',
+          color: ui.text,
+          border: `1px solid ${ui.border}`,
+          borderRadius: '12px',
+          padding: '12px 16px',
+        }
+      }
+    );
+
     try {
       const { data: emergenciaActual } = await supabase
         .from('emergencias')
@@ -400,7 +423,10 @@ export default function DashboardPage() {
         .eq('id', id)
         .single();
 
-      if (!emergenciaActual) return;
+      if (!emergenciaActual) {
+        toast.dismiss(toastId);
+        return;
+      }
 
       const estadoAnterior = emergenciaActual.estado;
       const companiaId = emergenciaActual.compania_asignada_id;
@@ -417,7 +443,40 @@ export default function DashboardPage() {
 
       if (estadoAnterior === 'pendiente' && nuevoEstado === 'en_proceso') {
         if (unidadesActuales <= 0) {
-          toast.error('🚨 Sin unidades disponibles. No se puede atender.');
+          toast.error(
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontWeight: 600, fontSize: '14px', color: ui.text }}>Operación denegada</span>
+              <span style={{ fontSize: '12.5px', color: ui.mutedText }}>
+                No hay unidades disponibles en la compañía.
+              </span>
+            </div>,
+            {
+              id: toastId,
+              icon: (
+                <span style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '20px',
+                  height: '20px',
+                  backgroundColor: 'rgba(230, 57, 70, 0.15)',
+                  color: '#E63946',
+                  borderRadius: '50%',
+                  fontWeight: 'bold',
+                  fontSize: '12px'
+                }}>
+                  !
+                </span>
+              ),
+              style: {
+                background: modoClaro ? '#FFFFFF' : '#161616',
+                color: ui.text,
+                border: `1px solid ${ui.border}`,
+                borderRadius: '12px',
+                padding: '12px 16px',
+              }
+            }
+          );
           setActualizando(false);
           return;
         }
@@ -474,14 +533,114 @@ export default function DashboardPage() {
 
       const data = await response.json();
       if (data.success) {
-        toast.success(`✅ ${nuevoEstado.replace('_', ' ').toUpperCase()}`);
+        toast.success(
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontWeight: 600, fontSize: '14px', color: ui.text }}>Estado Actualizado</span>
+            <span style={{ fontSize: '12.5px', color: ui.mutedText }}>
+              Incidente cambiado a: <strong>{nuevoEstado.replace('_', ' ').toUpperCase()}</strong>
+            </span>
+          </div>,
+          {
+            id: toastId,
+            icon: (
+              <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '20px',
+                height: '20px',
+                backgroundColor: 'rgba(46, 204, 113, 0.15)',
+                color: '#2ECC71',
+                borderRadius: '50%',
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}>
+                ✓
+              </span>
+            ),
+            style: {
+              background: modoClaro ? '#FFFFFF' : '#161616',
+              color: ui.text,
+              border: `1px solid ${ui.border}`,
+              borderRadius: '12px',
+              padding: '12px 16px',
+            },
+            duration: 2500,
+          }
+        );
         await cargarEmergencias();
         if (companiaId) await cargarCompania(companiaId);
       } else {
-        toast.error('Error al actualizar estado');
+        toast.error(
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+            <span style={{ fontWeight: 600, fontSize: '14px', color: ui.text }}>Error</span>
+            <span style={{ fontSize: '12.5px', color: ui.mutedText }}>
+              No se pudo actualizar el estado de la emergencia.
+            </span>
+          </div>,
+          {
+            id: toastId,
+            icon: (
+              <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '20px',
+                height: '20px',
+                backgroundColor: 'rgba(230, 57, 70, 0.15)',
+                color: '#E63946',
+                borderRadius: '50%',
+                fontWeight: 'bold',
+                fontSize: '12px'
+              }}>
+                !
+              </span>
+            ),
+            style: {
+              background: modoClaro ? '#FFFFFF' : '#161616',
+              color: ui.text,
+              border: `1px solid ${ui.border}`,
+              borderRadius: '12px',
+              padding: '12px 16px',
+            }
+          }
+        );
       }
     } catch (error) {
-      toast.error('Error de conexión');
+      toast.error(
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+          <span style={{ fontWeight: 600, fontSize: '14px', color: ui.text }}>Error de conexión</span>
+          <span style={{ fontSize: '12.5px', color: ui.mutedText }}>
+            Hubo un problema de red al intentar actualizar.
+          </span>
+        </div>,
+        {
+          id: toastId,
+          icon: (
+            <span style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '20px',
+              height: '20px',
+              backgroundColor: 'rgba(230, 57, 70, 0.15)',
+              color: '#E63946',
+              borderRadius: '50%',
+              fontWeight: 'bold',
+              fontSize: '12px'
+            }}>
+              !
+            </span>
+          ),
+          style: {
+            background: modoClaro ? '#FFFFFF' : '#161616',
+            color: ui.text,
+            border: `1px solid ${ui.border}`,
+            borderRadius: '12px',
+            padding: '12px 16px',
+          }
+        }
+      );
     } finally {
       setActualizando(false);
     }
@@ -583,6 +742,12 @@ export default function DashboardPage() {
       color: ui.text,
     }}>
       <Toaster position="top-right" />
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
       <NuevaEmergenciaPopup
         emergencia={nuevaEmergenciaAsignada}
         tema={tema}

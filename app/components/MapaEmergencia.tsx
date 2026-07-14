@@ -87,9 +87,9 @@ export default function MapaEmergencia({ ubicacion, tema = 'dark' }: MapaEmergen
       />
       <Marker position={[coords.lat, coords.lng]}>
         <Popup>
-          📍 <strong>Emergencia reportada aquí</strong>
+          <strong>Emergencia reportada aquí</strong>
           <br />
-          📌 Coordenadas:<br />
+          Coordenadas:<br />
           Latitud: {coords.lat.toFixed(6)}<br />
           Longitud: {coords.lng.toFixed(6)}
         </Popup>

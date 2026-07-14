@@ -413,7 +413,7 @@ export default function AgregarCompaniaPage() {
                         }}
                     >
                         <div style={{ padding: '16px 18px', borderBottom: `1px solid ${ui.border}` }}>
-                            <div style={{ color: ui.text, fontSize: '18px', fontWeight: 800 }}>📍 Seleccionar ubicación de la compañía</div>
+                            <div style={{ color: ui.text, fontSize: '18px', fontWeight: 800 }}>Seleccionar ubicación de la compañía</div>
                             <div style={{ color: ui.mutedText, fontSize: '12px', marginTop: '4px' }}>
                                 Haz clic en el mapa o arrastra el pin para ajustar las coordenadas.
                             </div>
